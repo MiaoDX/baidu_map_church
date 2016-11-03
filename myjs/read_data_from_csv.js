@@ -79,7 +79,34 @@ function read_data_from_csv_with_promise(csvFileName = "../../data/church_copy_a
 
 
 
+function read_duration_and_distance_data_from_csv_with_promise(csvFileName = "calc_time_result.csv"){
+    return new Promise(function(resolve,reject){
+        //var duration_and_distance = [];    
+        // title, address, lon,lat
+        d3.csv(csvFileName, function(error, links) {
+            
+            
+//            var trueindex = 0;
+//            for(var i = 0; i < links.length; i ++){
+//                church = links[i];
+//                
+//                if(church.title == "" && typeof(church.address) == "undefined"){ //empty
+//                    continue;
+//                }
+//                
+//                l = [trueindex.toString(), church.title, church.lon, church.lat];
+//                stops.push(new Stop(l));
+//                trueindex += 1;
+//            }
+        //    stops.forEach(function (e){
+        //      console.log(e.stop_name);
+        //    })
 
+            //return stops;
+            resolve( links );
+        })        
+    } );
+}
 
 
 
