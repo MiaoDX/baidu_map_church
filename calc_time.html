@@ -1,0 +1,146 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%; margin:0;font-family:"微软雅黑";}
+		#l-map{height:300px;width:100%;}
+		#r-result{width:100%; font-size: 14px; line-height: 20px;}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2EDDARfjUWrH6tN120tfa3WHczzrmX45"></script>
+   
+	<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<!--	<script src="//cdn.bootcss.com/d3/3.5.17/d3.js"></script>-->
+    <script src="d3.min.js"></script>  
+	<script src="read_data_from_csv.js"></script>
+	 <script src="calc_time.js"></script>
+	<title>公交换乘的时间和距离</title>
+	
+</head>
+<body>
+	<div id="l-map"></div>
+	<div id="r-result"></div>
+</body>
+</html>
+
+
+
+<script type="text/javascript">    
+    
+    var map = new BMap.Map("l-map");            
+	map.centerAndZoom("天津");
+    var p1 = new BMap.Point(117.200765,39.12413);
+    var p2 = new BMap.Point(117.199517,39.129259);
+    //calc_time(p1, p2);
+    var p3 = new BMap.Point(117.220074,39.124793);    
+    
+    //calc_time(p1, p3);  //23分钟 ,1.8公里
+    //test();
+    
+    //resultMap.has("a");
+    
+    
+    
+/*    test promise all
+    p_l = [];
+    p_l.push(calc_time_with_promise(p1, p2));
+    p_l.push(calc_time_with_promise(p1, p3));
+    var pa = Promise.all(p_l);
+    
+    pa.then(function(v){
+//        console.log(v);
+        console.log("at total promise.",v);
+    })
+*/
+    
+    
+//    for(var i = 0; i < 4; i++){
+//            Promise.resolve(calc_time_with_promise(p1, p2) )
+//            .then(function(v){
+//                console.log( "haha1",v );   // 21
+//                document.getElementById("r-result").innerHTML += v;//r.join("<br/>");
+//            })
+//
+//            Promise.resolve(calc_time_with_promise(p1, p3) )
+//            .then(function(v){
+//                console.log( "haha2",v );   // 21
+//                document.getElementById("r-result").innerHTML += v;//r.join("<br/>");
+//            })
+//    }
+    
+    //read_data_and_do_the_trick();
+
+    
+    
+    var stops = [];
+    var ss = read_data_from_csv_with_promise("church_only_ten.csv")
+    Promise.resolve(ss)
+    .then(function(stops_get){
+        //console.log( v );   // 21
+        stops = stops_get;
+        var calc_time_with_promise_list = []
+        
+        var stopsPoints = []
+        
+        stops.forEach(function(sp){
+            stopsPoints.push(new BMap.Point(sp.stop_lon, sp.stop_lat))
+        })
+        
+        
+//        var p_1,p_2;
+//        var outScope = stops.length - 1, innnerScope = stops.length - 2;
+        var outScope = stops.length - 1, innnerScope = stops.length;
+        for(var via = 0; via < outScope; via ++){
+            for(var to = via+1; to < innnerScope; to ++){
+
+                
+/**  innner `new` won't be accesed
+**
+//                var viaStop = stops[via];
+//                var toStop = stops[to];         
+//                var p_1 = new BMap.Point(viaStop.stop_lon,viaStop.stop_lat);
+//                var p_2 = new BMap.Point(to.stop_lon,to.stop_lat);
+                
+                //calc_time_with_promise_list.push(calc_time_with_promise(p_1, p_2));
+*/             
+         
+                calc_time_with_promise_list.push(calc_time_with_promise(stopsPoints[via], stopsPoints[to]));
+                
+                if(via == outScope-1 && to == innnerScope-1){
+
+
+                    return Promise.all(calc_time_with_promise_list);
+                    //return Promise.all(calc_time_with_promise_list);
+                }
+            }
+        }
+        
+
+        
+        //return Promise.all(calc_time_with_promise_list);
+        
+    }).then(function(v){
+        console.log( "haha2",v );   // 21
+        //document.getElementById("r-result").innerHTML += (p1.stop_id + "," + p2.stop_id + "," + v);//r.join("<br/>");
+        
+        var outScope = stops.length - 1, innnerScope = stops.length;
+        var vindex = 0;
+        for(var via = 0; via < outScope; via ++){
+            for(var to = via+1; to < innnerScope; to ++){
+                var viaStop = stops[via];
+                var toStop = stops[to]; 
+                document.getElementById("r-result").innerHTML += (viaStop.stop_id + "," + viaStop.stop_name + "," + toStop.stop_id + "," + toStop.stop_name + "," + v[vindex]+"<br>");//r.join("<br/>");        
+                vindex ++;
+            }
+        }
+        
+    })
+    .catch(function(err){
+        console.log(err)
+        throw new Error(err)
+    })
+
+    
+    
+    
+</script>
