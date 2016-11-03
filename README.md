@@ -1,4 +1,4 @@
-# 可是分析课程作业
+# 可视分析课程作业
 
 ## 缘由
 看到了 d3 中有力导向图（Force-Directed Graph），比如说 http://jsfiddle.net/DEeNB/100/ ，想使用一下。
