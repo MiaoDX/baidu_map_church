@@ -10,9 +10,9 @@
 
 使用的 API：
 
-1. `LocalSearch` 获取地点的经纬度坐标
-2. `transit.search` 获取两个经纬度坐标点间的路程，可选的交通工具种类：TransitRoute,DrivingRoute,WalkingRoute
-3. 在 [geojson.io](http://geojson.io) 上可以转变一下格式为 geojson 在 d3 上展示
+1.`LocalSearch` 获取地点的经纬度坐标
+2.`transit.search` 获取两个经纬度坐标点间的路程，可选的交通工具种类：TransitRoute,DrivingRoute,WalkingRoute
+3.在 [geojson.io](http://geojson.io) 上可以转变一下格式为 geojson 在 d3 上展示
 
 ## 目标
 
@@ -22,7 +22,7 @@
 
 Javascript 的异步调用还是很不习惯的，特别是使用百度地图的 API 来获取数据之时充满了艰辛，最终是很好的学习了 `promise` 的用法。
 
-1. `[LocalSearch](http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/LocalSearch)` 获取数据时并不能一次获取所有目标点（教堂数目目前查询结果是 104 个），即便是使用 `setPageCapacity` 也不够（文档号称是`取值范围：1 - 100`，实际使用时发现最多只有 50 个），所以需要进行分页查询。而事实是每次发送获取数据命令均会触发 函数，这对存储数据造成了一些麻烦，最终的解决方案看起来也是比较清晰的：
+1.[`LocalSearch`](http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/LocalSearch)获取数据时并不能一次获取所有目标点（教堂数目目前查询结果是 104 个），即便是使用 `setPageCapacity` 也不够（文档号称是`取值范围：1 - 100`，实际使用时发现最多只有 50 个），所以需要进行分页查询。而事实是每次发送获取数据命令均会触发 函数，这对存储数据造成了一些麻烦，最终的解决方案看起来也是比较清晰的：
 
 ``` javascript
      // http://blog.csdn.net/nocky/article/details/8172203
@@ -39,7 +39,7 @@ Javascript 的异步调用还是很不习惯的，特别是使用百度地图的
 
 从 html 中复制出的 csv 文件见 [data/church_copy_and_paste.csv](data/church_copy_and_paste.csv)，进一步地，由 [geojson.io](http://geojson.io) 转化得到的 `geojson` 格式文件见 [data/church_copy_and_paste_geojson_io_generate_map.geojson](data/church_copy_and_paste_geojson_io_generate_map.geojson)。
 
-2. 读取 cvs 文件
+2.读取 cvs 文件
 
 正常读取 cvs 文件是很简单的（目前是使用的 d3 中的方法），但是将数据用到其他地方便没那么直观了。最终找到的方法是返回一个 `promise` 供外部调用，仍旧给一个简单的代码片段：
 
@@ -66,7 +66,7 @@ function read_data_from_csv_with_promise(csvFileName = "../data/church_copy_and_
 其中 `resolve( stops )` 是将结果传递出去，这样在别处便可以使用了，只要对此 `promise` 设置 `.then` 方法即可。
 
 
-3. `[transit.search](http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/TransitRoute)` 对路径规划的查询与上面有类似的挑战，我们把查询方法变为 `promise`，在 `searchComplete` 中将结果返回，在这里给出代码片段：
+3.[`transit.search`](http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/TransitRoute)对路径规划的查询与上面有类似的挑战，我们把查询方法变为 `promise`，在 `searchComplete` 中将结果返回，在这里给出代码片段：
 
 ``` javascript
     var plan = results.getPlan(0);
