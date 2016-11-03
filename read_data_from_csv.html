@@ -25,20 +25,9 @@
 
 
 <script type="text/javascript">    
+
+//read_data_from_csv_with_promise_test();    
     
-var ss = read_duration_and_distance_data_from_csv_with_promise()
-Promise.resolve(ss)
-.then(function(v){
-    console.log( v );   // 21
-        
-    //{source: "同花顺", target: "IFIND", type: "resolved", rela:"主营产品"},    
-    v.forEach(function(l){
-         var ans = "{source:\"" + l.via_name+"\", target:\""+l.to_name+"\",type: \"resolved\""+ ", rela:\"" + l.distance +"\"}," + "<br>";
-         document.getElementById("r-result").innerHTML += ans;
-    })
-}
-    
-);
-    
+read_duration_and_distance_data_from_csv_with_promise_test();
     
 </script>

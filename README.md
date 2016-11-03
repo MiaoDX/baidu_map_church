@@ -39,7 +39,7 @@ Javascript 的异步调用还是很不习惯的，特别是使用百度地图的
 
 2. 读取 cvs 文件
 
-正常读取 cvs 文件是很简单的（目前是使用的 d3 中的方法），但是将数据用到其他地方便没那么直观了。
+正常读取 cvs 文件是很简单的（目前是使用的 d3 中的方法），但是将数据用到其他地方便没那么直观了。最终找到的方法是返回一个 `promise` 供外部调用，
 
 
 2. `[transit.search](http://developer.baidu.com/map/reference/index.php?title=Class:%E6%9C%8D%E5%8A%A1%E7%B1%BB/TransitRoute)` 对路径规划的查询与上面有类似的挑战
